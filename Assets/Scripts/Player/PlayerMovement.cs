@@ -52,6 +52,8 @@ public class PlayerMovement : MonoBehaviour
 
         Vector3 moveDirection = new Vector3(moveInput.x, 0, moveInput.y);
 
+        moveDirection = Quaternion.Euler(0, 45, 0) * moveDirection;
+
         if (moveDirection.sqrMagnitude > 0.01f)
         {
             Quaternion newRotation = Quaternion.LookRotation(moveDirection, player.transform.up);
@@ -83,8 +85,6 @@ public class PlayerMovement : MonoBehaviour
         // Si la velocidad es mayor a 0.1, activamos la animación
         if (currentSpeed > 0.1f)
         {
-            // Como tu Blend Tree tiene el Running en (1,1), enviamos 1 a ambos parámetros
-            // Si quieres que sea gradual, podrías usar: currentSpeed / moveSpeed
             animator.SetFloat("X", 1f);
             animator.SetFloat("Y", 1f);
         }

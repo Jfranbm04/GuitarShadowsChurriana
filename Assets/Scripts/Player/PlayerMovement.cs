@@ -1,34 +1,30 @@
-using System;
-using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using static UnityEngine.GraphicsBuffer;
 
 [RequireComponent(typeof(CharacterController))]
 public class PlayerMovement : MonoBehaviour
 {
-
     [Header("Movimiento")]
     public float moveSpeed = 5.0f;
+    public float rotationSpeed = 15f;
 
     [Header("Salto / Gravedad")]
     public float jumpHeight = 3f;
     public float gravity = -9.81f;
 
     [SerializeField] private CharacterController characterController;
-    //[SerializeField] private HacerseHijoMano hacerseHijoMano;
-
-    [SerializeField] private Vector2 moveInput;
+    private Vector2 moveInput;
     private float verticalVelocity;
     private bool jumpRequested = false;
+    [SerializeField] Animator animator;
+    private GameObject player => this.gameObject;   
 
-    //[SerializeField] private Animator animator;
 
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
+
     void Start()
     {
-        //animator = GetComponent<Animator>();
         characterController = GetComponent<CharacterController>();
-        //hacerseHijoMano = GetComponent<HacerseHijoMano>();
     }
 
     private void OnMove(InputValue value)
@@ -36,74 +32,67 @@ public class PlayerMovement : MonoBehaviour
         moveInput = value.Get<Vector2>();
     }
 
-    // Update is called once per frame
+    private void OnJump(InputValue value)
+    {
+        if (value.isPressed) jumpRequested = true;
+    }
+
+
     void Update()
     {
         if (characterController == null) return;
         ControlMovimiento();
-
         ControlAnimacion();
-
     }
-
-    //private void OnSoltar(InputValue value)
-    //{
-    //    hacerseHijoMano.SoltarPalo();
-
-    //}
-    private void ControlAnimacion()
-    {
-        Vector3 velocidad = characterController.velocity;
-        Vector3 movimientoLocal = characterController.transform.InverseTransformDirection(velocidad);
-
-        //animator.SetFloat("X", movimientoLocal.x);
-        //animator.SetFloat("Y", movimientoLocal.z);
-        //animator.SetBool("EnSuelo", characterController.isGrounded);
-        //animator.SetFloat("Z", verticalVelocity);
-
-    }
-
-    private void OnJump(InputValue value) {
-        if (value.isPressed) jumpRequested = true;
-    }
-
-    
-
 
     private void ControlMovimiento()
     {
         bool isGrounded = characterController.isGrounded;
-        // Reset vertical
-        if (isGrounded && verticalVelocity < 0f) verticalVelocity = - 2f;
+        if (isGrounded && verticalVelocity < 0f) verticalVelocity = -2f;
 
-        // Movimiento local XZ
-        Vector3 localMove = new Vector3(moveInput.x, 0, moveInput.y);
+        Vector3 moveDirection = new Vector3(moveInput.x, 0, moveInput.y);
 
-        // Convertir de local a mundo
-        Vector3 worldMove = transform.TransformDirection(localMove);
-
-        if (worldMove.sqrMagnitude > 1f) worldMove.Normalize();
-        
-        Vector3 horizontalvelocity = worldMove * moveSpeed;
-
-        // Salto
-        if(isGrounded && jumpRequested)
+        if (moveDirection.sqrMagnitude > 0.01f)
         {
-            //animator.SetTrigger("Saltar");
-            verticalVelocity = Mathf.Sqrt(jumpHeight * -2f * gravity);
-            jumpRequested = false;
-
-
+            Quaternion newRotation = Quaternion.LookRotation(moveDirection, player.transform.up);
+            player.transform.rotation = Quaternion.Slerp(player.transform.rotation, newRotation, Time.deltaTime * 8);
         }
 
+        if (moveDirection.sqrMagnitude > 1f) moveDirection.Normalize();
 
+        Vector3 finalVelocity = moveDirection * moveSpeed;
 
-        // Movimiento
+        if (isGrounded && jumpRequested)
+        {
+            verticalVelocity = Mathf.Sqrt(jumpHeight * -2f * gravity);
+            jumpRequested = false;
+        }
+
         verticalVelocity += gravity * Time.deltaTime;
-        //Vector3 velocity = horizontalvelocity;
-        //velocity.y = verticalVelocity;
-        horizontalvelocity.y = verticalVelocity;
-        characterController.Move(horizontalvelocity * Time.deltaTime);
+        finalVelocity.y = verticalVelocity;
 
+        characterController.Move(finalVelocity * Time.deltaTime);
+    }
+
+    private void ControlAnimacion()
+    {
+        // Obtenemos la velocidad horizontal (ignorando el eje Y de la gravedad)
+        Vector3 horizontalVelocity = new Vector3(characterController.velocity.x, 0, characterController.velocity.z);
+        float currentSpeed = horizontalVelocity.magnitude;
+
+        // Si la velocidad es mayor a 0.1, activamos la animación
+        if (currentSpeed > 0.1f)
+        {
+            // Como tu Blend Tree tiene el Running en (1,1), enviamos 1 a ambos parámetros
+            // Si quieres que sea gradual, podrías usar: currentSpeed / moveSpeed
+            animator.SetFloat("X", 1f);
+            animator.SetFloat("Y", 1f);
+        }
+        else
+        {
+            // Si está quieto, volvemos a Idle (0,0)
+            animator.SetFloat("X", 0f);
+            animator.SetFloat("Y", 0f);
+        }
     }
 }

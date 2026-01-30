@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using static UnityEngine.GraphicsBuffer;
@@ -18,8 +19,11 @@ public class PlayerMovement : MonoBehaviour
     private float verticalVelocity;
     private bool jumpRequested = false;
     [SerializeField] Animator animator;
-    private GameObject player => this.gameObject;   
-
+    private GameObject player => this.gameObject;
+    [Header("Dash")] 
+    public float dashForce = 5f;
+    public float dashCooldown = 1f;
+    private bool dashOnCooldown = false;
 
 
     void Start()
@@ -34,10 +38,33 @@ public class PlayerMovement : MonoBehaviour
 
     private void OnJump(InputValue value)
     {
-        if (value.isPressed) jumpRequested = true;
+        //if (value.isPressed) jumpRequested = true;
+        Dash();
     }
 
+    private void Dash()
+    {
+        if (dashOnCooldown == false)
+        {
+            
+            Vector3 forceToApply = new Vector3(moveInput.x * dashForce,0,moveInput.y * dashForce) ;
+            forceToApply =  Quaternion.Euler(0, 45, 0) * forceToApply;
+            characterController.Move(forceToApply);
+            dashOnCooldown = true;
+            StartCoroutine(DashCooldown());
+         
+        }
+       
+    }
 
+    IEnumerator DashCooldown()
+    {
+       
+            yield return new WaitForSeconds(dashCooldown);  
+            dashOnCooldown = false;
+            StopCoroutine(DashCooldown());
+      
+    }
     void Update()
     {
         if (characterController == null) return;
@@ -82,7 +109,7 @@ public class PlayerMovement : MonoBehaviour
         Vector3 horizontalVelocity = new Vector3(characterController.velocity.x, 0, characterController.velocity.z);
         float currentSpeed = horizontalVelocity.magnitude;
 
-        // Si la velocidad es mayor a 0.1, activamos la animación
+        // Si la velocidad es mayor a 0.1, activamos la animaciï¿½n
         if (currentSpeed > 0.1f)
         {
             animator.SetFloat("X", 1f);
@@ -90,7 +117,7 @@ public class PlayerMovement : MonoBehaviour
         }
         else
         {
-            // Si está quieto, volvemos a Idle (0,0)
+            // Si estï¿½ quieto, volvemos a Idle (0,0)
             animator.SetFloat("X", 0f);
             animator.SetFloat("Y", 0f);
         }

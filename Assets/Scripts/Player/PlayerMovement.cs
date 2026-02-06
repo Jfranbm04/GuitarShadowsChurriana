@@ -25,7 +25,7 @@ public class PlayerMovement : MonoBehaviour
     public float dashCooldown = 1f;
     private bool dashOnCooldown = false;
 
-
+    static public bool dialogueActive = false; // Variable estática para controlar el estado del diálogo
     void Start()
     {
         characterController = GetComponent<CharacterController>();
@@ -68,6 +68,16 @@ public class PlayerMovement : MonoBehaviour
     void Update()
     {
         if (characterController == null) return;
+
+        // Si hay un diálogo, no procesamos el movimiento ni las animaciones
+        if (dialogueActive)
+        {
+            // Opcional: Forzar animaciones a Idle si quieres
+            animator.SetFloat("X", 0);
+            animator.SetFloat("Y", 0);
+            return;
+        }
+
         ControlMovimiento();
         ControlAnimacion();
     }

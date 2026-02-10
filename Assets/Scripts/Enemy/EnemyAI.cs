@@ -4,55 +4,85 @@ using System.Collections;
 
 public class EnemyAI : MonoBehaviour
 {
-    public float radioMovimiento = 20f; // Qué tan lejos puede ir
-    public float tiempoEspera = 2f;    // Cuánto espera al llegar
+    [Header("Configuración de Zona")]
+    public Transform zoneCenter;
+    public float wanderRadius = 15f;
+
+    [Header("Configuración de Tiempos")]
+    public float waitTime = 0.5f; // Cuánto tiempo espera al llegar a un punto
+
     private NavMeshAgent agent;
+    private bool isWaiting = false;
 
     void Start()
     {
         agent = GetComponent<NavMeshAgent>();
-        // Iniciamos el ciclo de movimiento
-        StartCoroutine(RutinaMovimiento());
+
+        // Si olvidaste asignar un centro, usa su posición inicial
+        if (zoneCenter == null)
+        {
+            GameObject centerObj = new GameObject(gameObject.name + "_Center");
+            centerObj.transform.position = transform.position;
+            zoneCenter = centerObj.transform;
+        }
+
+        GoToNewRandomLocation();
     }
 
-    IEnumerator RutinaMovimiento()
+    void Update()
     {
-        while (true)
+        if (!agent.isOnNavMesh || !agent.isActiveAndEnabled) return;
+
+        if (!agent.pathPending && agent.remainingDistance <= agent.stoppingDistance)
         {
-            // 1. Buscar un punto aleatorio
-            Vector3 destinoAleatorio = GenerarPuntoAleatorio(transform.position, radioMovimiento);
-
-            // 2. Ordenar al agente que vaya allí
-            agent.SetDestination(destinoAleatorio);
-
-            // 3. Esperar hasta que el agente llegue al destino
-            // Comprobamos si la distancia restante es pequeña
-            while (agent.pathPending || agent.remainingDistance > 0.5f)
+            if (!isWaiting)
             {
-                yield return null;
+                StartCoroutine(WaitAndMove());
             }
-
-            // 4. Una vez llega, espera un tiempo antes de buscar otro punto
-            yield return new WaitForSeconds(tiempoEspera);
         }
     }
 
-    Vector3 GenerarPuntoAleatorio(Vector3 origen, float distancia)
+    IEnumerator WaitAndMove()
     {
-        // Genera una dirección aleatoria dentro de una esfera
-        Vector3 direccionAleatoria = Random.insideUnitSphere * distancia;
-        direccionAleatoria += origen;
+        isWaiting = true;
+
+
+        yield return new WaitForSeconds(waitTime);
+
+        GoToNewRandomLocation();
+
+        isWaiting = false;
+    }
+
+    void GoToNewRandomLocation()
+    {
+        Vector3 newPos = GetRandomLocationInZone();
+        agent.SetDestination(newPos);
+    }
+
+    Vector3 GetRandomLocationInZone()
+    {
+        // Calculamos el punto aleatorio SIEMPRE basándonos en zoneCenter
+        Vector3 randomDirection = Random.insideUnitSphere * wanderRadius;
+        randomDirection += zoneCenter.position;
 
         NavMeshHit hit;
-        Vector3 puntoFinal = origen;
-
-        // "SamplePosition" busca el punto más cercano en el NavMesh legal
-        // para que el enemigo no intente irse fuera del mapa
-        if (NavMesh.SamplePosition(direccionAleatoria, out hit, distancia, 1))
+        // Buscamos el punto más cercano en el NavMesh dentro del radio
+        if (NavMesh.SamplePosition(randomDirection, out hit, wanderRadius, NavMesh.AllAreas))
         {
-            puntoFinal = hit.position;
+            return hit.position;
         }
 
-        return puntoFinal;
+        return zoneCenter.position; // Backup por si falla
+    }
+
+    // Para ver el radio de la zona en el Editor (ayuda mucho a ajustar)
+    void OnDrawGizmosSelected()
+    {
+        if (zoneCenter != null)
+        {
+            Gizmos.color = Color.cyan;
+            Gizmos.DrawWireSphere(zoneCenter.position, wanderRadius);
+        }
     }
 }

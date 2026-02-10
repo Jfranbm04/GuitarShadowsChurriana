@@ -26,6 +26,7 @@ public class Player : MonoBehaviour
             if (!inmune)
             {
                 vida -= 10;
+                Debug.Log("Vida: " + vida);
                 StartCoroutine(ActivarInmunidad());
             }
             

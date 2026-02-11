@@ -6,6 +6,8 @@ public class NPCSystem : MonoBehaviour
     // Arrastra aquí el objeto que tiene el script "DialogueScript"
     public DialogueScript dialogueManager;
 
+    public GameObject Interactuar;
+
     // Escribe aquí los diálogos de este NPC específico en el Inspector
     [TextArea(3, 10)]
     public string[] npcLines;
@@ -29,10 +31,12 @@ public class NPCSystem : MonoBehaviour
     private void OnTriggerEnter(Collider other)
     {
         if (other.CompareTag("Player")) player_detected = true;
+        Interactuar.SetActive(true);
     }
 
     private void OnTriggerExit(Collider other)
     {
         if (other.CompareTag("Player")) player_detected = false;
+        Interactuar.SetActive(false);
     }
 }

@@ -99,7 +99,6 @@ public class EnemyAI : MonoBehaviour
         // Dibuja una esfera de alambre con el radio de detección
         Gizmos.DrawWireSphere(transform.position, radioDeteccion);
 
-        // Opcional: Dibuja el radio de patrulla en otro color
         if (centroDeZona != null)
         {
             Gizmos.color = Color.cyan;

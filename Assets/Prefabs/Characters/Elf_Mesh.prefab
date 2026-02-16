@@ -50,7 +50,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: bc5cfe210588ee74983fe19ad6518b3f, type: 3}
       propertyPath: m_Name
-      value: Elf_Mesh 1
+      value: Elf_Mesh
       objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: bc5cfe210588ee74983fe19ad6518b3f, type: 3}
       propertyPath: m_IsActive
@@ -69,10 +69,16 @@ PrefabInstance:
       addedObject: {fileID: 1035911501808192644}
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: bc5cfe210588ee74983fe19ad6518b3f, type: 3}
       insertIndex: -1
+      addedObject: {fileID: -269198900229439086}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: bc5cfe210588ee74983fe19ad6518b3f, type: 3}
+      insertIndex: -1
       addedObject: {fileID: 3415706489524684166}
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: bc5cfe210588ee74983fe19ad6518b3f, type: 3}
       insertIndex: -1
       addedObject: {fileID: 8183583975536294942}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: bc5cfe210588ee74983fe19ad6518b3f, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 89158808828644574}
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: bc5cfe210588ee74983fe19ad6518b3f, type: 3}
       insertIndex: -1
       addedObject: {fileID: 8947675139467381911}
@@ -105,6 +111,20 @@ CapsuleCollider:
   m_Height: 1.9167862
   m_Direction: 1
   m_Center: {x: 0, y: 0.84007645, z: 0}
+--- !u!114 &-269198900229439086
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9033591278248191423}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6a468cbd27f8eb74c9d7923cb3030607, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::EnemyController
+  vidaMaxima: 100
+  estaCongelado: 0
 --- !u!195 &3415706489524684166
 NavMeshAgent:
   m_ObjectHideFlags: 0
@@ -139,9 +159,25 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 56742aa7e983cc64aaf781e4b6cc1b43, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EnemyAI
-  zoneCenter: {fileID: 0}
-  wanderRadius: 15
-  waitTime: 0.5
+  centroDeZona: {fileID: 0}
+  radioDeZona: 10
+  radioDeteccion: 12
+  tagJugador: Player
+  tiempoEspera: 2
+--- !u!114 &89158808828644574
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9033591278248191423}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6a468cbd27f8eb74c9d7923cb3030607, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::EnemyController
+  vidaMaxima: 100
+  estaCongelado: 0
 --- !u!54 &8947675139467381911
 Rigidbody:
   m_ObjectHideFlags: 0

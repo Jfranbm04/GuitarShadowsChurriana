@@ -1,6 +1,6 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!1001 &6196661182159862396
+--- !u!1001 &8186605922219579630
 PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
@@ -10,11 +10,11 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: -8679921383154817045, guid: bc5cfe210588ee74983fe19ad6518b3f, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -322.79697
+      value: -336.7945
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: bc5cfe210588ee74983fe19ad6518b3f, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 74.59254
+      value: 74.79636
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: bc5cfe210588ee74983fe19ad6518b3f, type: 3}
       propertyPath: m_LocalPosition.z
@@ -50,7 +50,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: bc5cfe210588ee74983fe19ad6518b3f, type: 3}
       propertyPath: m_Name
-      value: Elf_Mesh
+      value: Elf_Mesh 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: bc5cfe210588ee74983fe19ad6518b3f, type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 1793189627908271660, guid: bc5cfe210588ee74983fe19ad6518b3f, type: 3}
       propertyPath: 'm_Materials.Array.data[0]'
@@ -62,20 +66,29 @@ PrefabInstance:
     m_AddedComponents:
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: bc5cfe210588ee74983fe19ad6518b3f, type: 3}
       insertIndex: -1
-      addedObject: {fileID: 1858379781348253273}
+      addedObject: {fileID: 1035911501808192644}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: bc5cfe210588ee74983fe19ad6518b3f, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 3415706489524684166}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: bc5cfe210588ee74983fe19ad6518b3f, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 8183583975536294942}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: bc5cfe210588ee74983fe19ad6518b3f, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 8947675139467381911}
   m_SourcePrefab: {fileID: 100100000, guid: bc5cfe210588ee74983fe19ad6518b3f, type: 3}
---- !u!1 &6431033969191028525 stripped
+--- !u!1 &9033591278248191423 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: bc5cfe210588ee74983fe19ad6518b3f, type: 3}
-  m_PrefabInstance: {fileID: 6196661182159862396}
+  m_PrefabInstance: {fileID: 8186605922219579630}
   m_PrefabAsset: {fileID: 0}
---- !u!136 &1858379781348253273
+--- !u!136 &1035911501808192644
 CapsuleCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6431033969191028525}
+  m_GameObject: {fileID: 9033591278248191423}
   m_Material: {fileID: 0}
   m_IncludeLayers:
     serializedVersion: 2
@@ -92,3 +105,67 @@ CapsuleCollider:
   m_Height: 1.9167862
   m_Direction: 1
   m_Center: {x: 0, y: 0.84007645, z: 0}
+--- !u!195 &3415706489524684166
+NavMeshAgent:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9033591278248191423}
+  m_Enabled: 1
+  m_AgentTypeID: 0
+  m_Radius: 0.5
+  m_Speed: 3.5
+  m_Acceleration: 8
+  avoidancePriority: 50
+  m_AngularSpeed: 120
+  m_StoppingDistance: 0
+  m_AutoTraverseOffMeshLink: 1
+  m_AutoBraking: 1
+  m_AutoRepath: 1
+  m_Height: 2
+  m_BaseOffset: 0
+  m_WalkableMask: 4294967295
+  m_ObstacleAvoidanceType: 4
+--- !u!114 &8183583975536294942
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9033591278248191423}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 56742aa7e983cc64aaf781e4b6cc1b43, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::EnemyAI
+  zoneCenter: {fileID: 0}
+  wanderRadius: 15
+  waitTime: 0.5
+--- !u!54 &8947675139467381911
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9033591278248191423}
+  serializedVersion: 5
+  m_Mass: 1
+  m_LinearDamping: 0
+  m_AngularDamping: 0.05
+  m_CenterOfMass: {x: 0, y: 0, z: 0}
+  m_InertiaTensor: {x: 1, y: 1, z: 1}
+  m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ImplicitCom: 1
+  m_ImplicitTensor: 1
+  m_UseGravity: 1
+  m_IsKinematic: 1
+  m_Interpolate: 0
+  m_Constraints: 0
+  m_CollisionDetection: 0

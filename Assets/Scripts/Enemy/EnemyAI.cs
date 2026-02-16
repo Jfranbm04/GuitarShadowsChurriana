@@ -4,55 +4,117 @@ using System.Collections;
 
 public class EnemyAI : MonoBehaviour
 {
-    public float radioMovimiento = 20f; // Qué tan lejos puede ir
-    public float tiempoEspera = 2f;    // Cuánto espera al llegar
+    [Header("Configuración de Zona")]
+    public Transform centroDeZona;
+    public float radioDeZona = 20f;
+
+    [Header("Detección del Jugador")]
+    public float radioDeteccion = 5f; 
+    public string tagJugador = "Player"; 
+    private Transform playerTransform;
+    private bool siguiendoAlJugador = false;
+
+    [Header("Ajustes de Movimiento")]
+    public float tiempoEspera = 2f;
     private NavMeshAgent agent;
 
     void Start()
     {
         agent = GetComponent<NavMeshAgent>();
-        // Iniciamos el ciclo de movimiento
-        StartCoroutine(RutinaMovimiento());
+
+        // Buscamos al jugador automáticamente por su etiqueta
+        GameObject jugador = GameObject.FindGameObjectWithTag(tagJugador);
+        if (jugador != null) playerTransform = jugador.transform;
+
+        // Aseguramos posición inicial en el NavMesh
+        NavMeshHit hit;
+        if (NavMesh.SamplePosition(transform.position, out hit, 2.0f, agent.areaMask))
+        {
+            agent.Warp(hit.position);
+        }
+
+        StartCoroutine(RutinaPatrulla());
     }
 
-    IEnumerator RutinaMovimiento()
+    void Update()
+    {
+        ComprobarDistanciaJugador();
+    }
+
+    void ComprobarDistanciaJugador()
+    {
+        if (playerTransform == null) return;
+
+        float distancia = Vector3.Distance(transform.position, playerTransform.position);
+
+        if (distancia <= radioDeteccion)
+        {
+            // ESTADO: PERSEGUIR
+            siguiendoAlJugador = true;
+            agent.SetDestination(playerTransform.position);
+            agent.stoppingDistance = 1.2f; // Se detiene un poco antes de chocar para que la animación se vea bien
+        }
+        else
+        {
+            // ESTADO: VOLVER A PATRULLAR
+            if (siguiendoAlJugador)
+            {
+                siguiendoAlJugador = false;
+                agent.stoppingDistance = 0f; // Resetear distancia para que llegue bien a los puntos de patrulla
+            }
+        }
+    }
+
+    IEnumerator RutinaPatrulla()
     {
         while (true)
         {
-            // 1. Buscar un punto aleatorio
-            Vector3 destinoAleatorio = GenerarPuntoAleatorio(transform.position, radioMovimiento);
-
-            // 2. Ordenar al agente que vaya allí
-            agent.SetDestination(destinoAleatorio);
-
-            // 3. Esperar hasta que el agente llegue al destino
-            // Comprobamos si la distancia restante es pequeña
-            while (agent.pathPending || agent.remainingDistance > 0.5f)
+            // Si NO estamos siguiendo al jugador, buscamos puntos aleatorios
+            if (!siguiendoAlJugador)
             {
+                Vector3 destino = GenerarPuntoEnZona(centroDeZona.position, radioDeZona);
+                agent.SetDestination(destino);
+
+                // Esperar a llegar, pero interrumpir si ve al jugador
+                while (!siguiendoAlJugador && (agent.pathPending || agent.remainingDistance > 0.5f))
+                {
+                    yield return null;
+                }
+
+                if (!siguiendoAlJugador)
+                    yield return new WaitForSeconds(tiempoEspera);
+            }
+            else
+            {
+                // Si está persiguiendo, esperamos un frame y volvemos a chequear
                 yield return null;
             }
-
-            // 4. Una vez llega, espera un tiempo antes de buscar otro punto
-            yield return new WaitForSeconds(tiempoEspera);
         }
     }
-
-    Vector3 GenerarPuntoAleatorio(Vector3 origen, float distancia)
+    private void OnDrawGizmosSelected()
     {
-        // Genera una dirección aleatoria dentro de una esfera
-        Vector3 direccionAleatoria = Random.insideUnitSphere * distancia;
-        direccionAleatoria += origen;
+        // Color de la esfera
+        Gizmos.color = Color.yellow;
 
-        NavMeshHit hit;
-        Vector3 puntoFinal = origen;
+        // Dibuja una esfera de alambre con el radio de detección
+        Gizmos.DrawWireSphere(transform.position, radioDeteccion);
 
-        // "SamplePosition" busca el punto más cercano en el NavMesh legal
-        // para que el enemigo no intente irse fuera del mapa
-        if (NavMesh.SamplePosition(direccionAleatoria, out hit, distancia, 1))
+        // Opcional: Dibuja el radio de patrulla en otro color
+        if (centroDeZona != null)
         {
-            puntoFinal = hit.position;
+            Gizmos.color = Color.cyan;
+            Gizmos.DrawWireSphere(centroDeZona.position, radioDeZona);
         }
-
-        return puntoFinal;
+    }
+    Vector3 GenerarPuntoEnZona(Vector3 centro, float radio)
+    {
+        Vector3 direccionAleatoria = Random.insideUnitSphere * radio;
+        direccionAleatoria += centro;
+        NavMeshHit hit;
+        if (NavMesh.SamplePosition(direccionAleatoria, out hit, radio, agent.areaMask))
+        {
+            return hit.position;
+        }
+        return centro;
     }
 }

@@ -11,9 +11,11 @@ GameObject:
   - component: {fileID: 4785019396600056348}
   - component: {fileID: 2966239739090591876}
   - component: {fileID: 6039856204986557179}
+  - component: {fileID: -5125747628579839111}
+  - component: {fileID: 3739896319518528140}
   m_Layer: 0
   m_Name: MinionFinal
-  m_TagString: Untagged
+  m_TagString: Enemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -79,6 +81,37 @@ CapsuleCollider:
   m_Height: 2.0956116
   m_Direction: 1
   m_Center: {x: -0.006216049, y: 1.040245, z: 0.010504246}
+--- !u!114 &-5125747628579839111
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 771312566406856236}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 56742aa7e983cc64aaf781e4b6cc1b43, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::EnemyAI
+  centroDeZona: {fileID: 0}
+  radioDeZona: 20
+  radioDeteccion: 5
+  tagJugador: Player
+  tiempoEspera: 0.5
+--- !u!114 &3739896319518528140
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 771312566406856236}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6a468cbd27f8eb74c9d7923cb3030607, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::EnemyController
+  vidaMaxima: 10
+  estaCongelado: 0
 --- !u!1001 &2312681115875269297
 PrefabInstance:
   m_ObjectHideFlags: 0

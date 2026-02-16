@@ -1658,9 +1658,11 @@ GameObject:
   - component: {fileID: 6474674405130229027}
   - component: {fileID: 7693259564905054238}
   - component: {fileID: 5155602655627711571}
+  - component: {fileID: 158570518487762280}
+  - component: {fileID: -5419512269246133694}
   m_Layer: 0
   m_Name: Cigala
-  m_TagString: Untagged
+  m_TagString: Enemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -1728,6 +1730,37 @@ CapsuleCollider:
   m_Height: 1.8462753
   m_Direction: 1
   m_Center: {x: -0.009307861, y: 0.89307785, z: 0}
+--- !u!114 &158570518487762280
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3305285416958480337}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6a468cbd27f8eb74c9d7923cb3030607, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::EnemyController
+  vidaMaxima: 100
+  estaCongelado: 0
+--- !u!114 &-5419512269246133694
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3305285416958480337}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 56742aa7e983cc64aaf781e4b6cc1b43, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::EnemyAI
+  centroDeZona: {fileID: 0}
+  radioDeZona: 20
+  radioDeteccion: 5
+  tagJugador: Player
+  tiempoEspera: 2
 --- !u!1 &3458669194672989026
 GameObject:
   m_ObjectHideFlags: 0

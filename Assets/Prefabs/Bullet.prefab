@@ -68,6 +68,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Keys_FBX
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: e3eb78a0c6f5371489043d193bef1abb, type: 3}
+      propertyPath: m_TagString
+      value: Bullet
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []

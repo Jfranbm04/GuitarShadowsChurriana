@@ -18,6 +18,24 @@ public class EnemyController : MonoBehaviour
         //ActualizarUI();
     }
 
+    // Recibe daño de la bala y quita vida al enemigo
+    private void OnCollisionEnter(Collision collision)
+    {
+        if (collision.gameObject.CompareTag("Bullet"))
+        {
+            BulletStats stats = collision.gameObject.GetComponent<BulletStats>();
+            if (stats != null)
+            {
+                RecibirDanio(stats.GetDamage());
+                Debug.Log("Enemigo impactado. Vida restante: " + vidaActual);
+            }
+
+            // Destruimos la bala para que no atraviese al enemigo
+            Destroy(collision.gameObject);
+        }
+    }
+
+
     public void RecibirDanio(float cantidad)
     {
         vidaActual -= cantidad;

@@ -36,6 +36,8 @@ public class PlayerMovement : MonoBehaviour
         moveInput = value.Get<Vector2>();
     }
 
+  
+
     private void OnJump(InputValue value)
     {
         //if (value.isPressed) jumpRequested = true;

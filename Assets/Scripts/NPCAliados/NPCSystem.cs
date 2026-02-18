@@ -3,12 +3,12 @@ using UnityEngine.InputSystem;
 
 public class NPCSystem : MonoBehaviour
 {
-    // Arrastra aquí el objeto que tiene el script "DialogueScript"
+    // Arrastra aquï¿½ el objeto que tiene el script "DialogueScript"
     public DialogueScript dialogueManager;
 
     public GameObject Interactuar;
 
-    // Escribe aquí los diálogos de este NPC específico en el Inspector
+    // Escribe aquï¿½ los diï¿½logos de este NPC especï¿½fico en el Inspector
     [TextArea(3, 10)]
     public string[] npcLines;
 
@@ -16,14 +16,30 @@ public class NPCSystem : MonoBehaviour
 
     void Update()
     {
-        // Si detectamos al jugador, pulsa E y NO hay un diálogo activo...
+        // Si detectamos al jugador, pulsa E y NO hay un diï¿½logo activo...
         if (player_detected && Keyboard.current.eKey.wasPressedThisFrame && !PlayerMovement.dialogueActive)
         {
-            // Activamos el sistema de diálogo
+            if (this.gameObject.tag == "Sergey")
+            {
+                Player player = GameObject.FindGameObjectWithTag("Player").GetComponent<Player>();
+                player.Curar();
+            }
+            // Descomentar cuando esten implementados todos los NPCS
+            /*if (this.gameObject.tag == "Lulu")
+            {
+                PlayerHabilities playerA = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerHabilities>();
+                playerA.activeQ();
+            }
+            if (this.gameObject.tag == "Parsifal")
+            {
+                PlayerHabilities playerA = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerHabilities>();
+                playerA.activeR();
+            }*/
+            // Activamos el sistema de diï¿½logo
             PlayerMovement.dialogueActive = true;
             dialogueManager.gameObject.SetActive(true);
 
-            // Le pasamos nuestras líneas al manager y lo iniciamos
+            // Le pasamos nuestras lï¿½neas al manager y lo iniciamos
             dialogueManager.StartDialogue(npcLines);
         }
     }

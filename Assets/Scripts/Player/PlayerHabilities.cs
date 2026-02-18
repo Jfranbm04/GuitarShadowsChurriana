@@ -1,5 +1,6 @@
 using System.Collections;
 using TMPro;
+using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.UI;
@@ -10,7 +11,7 @@ public class PlayerHabilities : MonoBehaviour
     public Image imageQ;
     public TextMeshProUGUI textQ;
     public float cooldownQ = 7;
-    
+    public GameObject abilityQ;
     
     private bool QonCooldown = false;
 
@@ -22,10 +23,11 @@ public class PlayerHabilities : MonoBehaviour
     public TextMeshProUGUI textR;
     public float cooldownR = 20;
     public Image imageRBuff;
-   
+    public GameObject stunArea;
+    public GameObject abilityR;
     private bool RonCooldown = false;
-
-   
+    private bool QActive = false;
+    private bool RActive = false;
     private float currentCooldownR;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -34,22 +36,41 @@ public class PlayerHabilities : MonoBehaviour
       textQ.text = string.Empty;
       imageR.fillAmount = 0;
       textR.text = string.Empty;
+      
+      //Descomentar cuando implementados NPCS
+      //abilityQ.SetActive(false);
+      //abilityR.SetActive(false);
     }
-    
+
+    public void activeQ()
+    {
+        QActive = true;
+        abilityQ.SetActive(true);
+    }
+
+    public void activeR()
+    {
+        RActive = true;
+        abilityR.SetActive(true);
+    }
     private void OnStun(InputValue value)
     {
-        if (!QonCooldown)
+        if (!QonCooldown /*&& QActive*/)
         {
             StartCoroutine(QCooldown());
+           
         } 
+        stunArea.SetActive(true);
+      
+        
     }
 
     private void OnBuff(InputValue value)
     {
-        if (!RonCooldown)
+        if (!RonCooldown /*&& RActive*/)
         {
             StartCoroutine(TemporalBuff());
-            
+           
         }
     }
     
@@ -57,9 +78,14 @@ public class PlayerHabilities : MonoBehaviour
     {
         QonCooldown = true;
         currentCooldownQ = cooldownQ;
-        BulletStats.damage = 20;
+        
+        //BulletStats.damage = 20;
         while (currentCooldownQ > 0)
         {
+            if (currentCooldownQ < 6)
+            {
+                stunArea.SetActive(false); 
+            }
             currentCooldownQ -= Time.deltaTime;
             
             imageQ.fillAmount = currentCooldownQ / cooldownQ;

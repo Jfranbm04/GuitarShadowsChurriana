@@ -55,6 +55,10 @@ public class Player : MonoBehaviour
         
     }
 
+    public void Curar()
+    {
+        vida = maxHealth;
+    }
     public void quitarVida(float damage)
     {
         if (!inmune)

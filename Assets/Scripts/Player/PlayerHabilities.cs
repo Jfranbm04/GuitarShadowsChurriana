@@ -29,6 +29,10 @@ public class PlayerHabilities : MonoBehaviour
     private bool QActive = false;
     private bool RActive = false;
     private float currentCooldownR;
+
+    public ParticleSystem Sparks;
+
+    public GameObject sparksObject;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
@@ -36,8 +40,8 @@ public class PlayerHabilities : MonoBehaviour
       textQ.text = string.Empty;
       imageR.fillAmount = 0;
       textR.text = string.Empty;
+      Sparks.Stop();
       
-      //Descomentar cuando implementados NPCS
       abilityQ.SetActive(false);
       abilityR.SetActive(false);
     }
@@ -107,16 +111,18 @@ public class PlayerHabilities : MonoBehaviour
     
     IEnumerator RCooldown()
     {
-        
+        Sparks.Pause();
+        sparksObject.SetActive(false);
         RonCooldown = true;
         currentCooldownR = cooldownR;
         while (currentCooldownR > 0)
         {
+            
             currentCooldownR -= Time.deltaTime;
 
             imageR.fillAmount = currentCooldownR / cooldownR;
             textR.text = Mathf.Ceil(currentCooldownR).ToString();
-
+          
             yield return null;
         }
 
@@ -127,6 +133,8 @@ public class PlayerHabilities : MonoBehaviour
 
     IEnumerator TemporalBuff()
     {
+        sparksObject.SetActive(true);
+        Sparks.Play();
         imageRBuff.color = Color.yellow;
         BulletStats.damage = 20;
         yield return new WaitForSecondsRealtime(15);

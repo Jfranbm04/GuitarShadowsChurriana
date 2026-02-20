@@ -38,8 +38,8 @@ public class PlayerHabilities : MonoBehaviour
       textR.text = string.Empty;
       
       //Descomentar cuando implementados NPCS
-      //abilityQ.SetActive(false);
-      //abilityR.SetActive(false);
+      abilityQ.SetActive(false);
+      abilityR.SetActive(false);
     }
 
     public void activeQ()
@@ -55,19 +55,20 @@ public class PlayerHabilities : MonoBehaviour
     }
     private void OnStun(InputValue value)
     {
-        if (!QonCooldown /*&& QActive*/)
+        if (!QonCooldown && QActive)
         {
+            stunArea.SetActive(true);
             StartCoroutine(QCooldown());
            
         } 
-        stunArea.SetActive(true);
+       
       
         
     }
 
     private void OnBuff(InputValue value)
     {
-        if (!RonCooldown /*&& RActive*/)
+        if (!RonCooldown && RActive)
         {
             StartCoroutine(TemporalBuff());
            

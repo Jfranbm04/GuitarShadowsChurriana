@@ -25,7 +25,7 @@ public class NPCSystem : MonoBehaviour
                 player.Curar();
             }
             // Descomentar cuando esten implementados todos los NPCS
-            /*if (this.gameObject.tag == "Lulu")
+            if (this.gameObject.tag == "Lulu")
             {
                 PlayerHabilities playerA = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerHabilities>();
                 playerA.activeQ();
@@ -34,7 +34,7 @@ public class NPCSystem : MonoBehaviour
             {
                 PlayerHabilities playerA = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerHabilities>();
                 playerA.activeR();
-            }*/
+            }
             // Activamos el sistema de di�logo
             PlayerMovement.dialogueActive = true;
             dialogueManager.gameObject.SetActive(true);

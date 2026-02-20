@@ -1,70 +1,83 @@
-using System;
 using System.Collections;
-using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
 
 public class Player : MonoBehaviour
 {
+    [Header("UI de Vida")]
     public Slider healthSlider;
     public Slider easeHealthSlider;
-    private float maxHealth = 100f;
+
+    [Header("Ajustes de Vida")]
+    [SerializeField] private float maxHealth = 100f;
     private float vida;
     private bool inmune = false;
+    private float lerpSpeed = 0.05f;
 
-    private float lerpSpeed = 0.02f;
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
+    // Referencia al controlador de la escena
+    private ControladorJuego controlador;
+
     void Start()
     {
-        vida =  maxHealth;
+        vida = maxHealth;
+        // Buscamos automáticamente el objeto que tiene el script ControladorJuego
+        controlador = Object.FindFirstObjectByType<ControladorJuego>();
     }
 
-    // Update is called once per frame
     void Update()
     {
+        // Actualización de las barras de vida
         if (healthSlider.value != vida)
         {
-            healthSlider.value = vida; 
+            healthSlider.value = vida;
         }
 
         if (healthSlider.value != easeHealthSlider.value)
         {
-            easeHealthSlider.value= Mathf.Lerp(easeHealthSlider.value,vida,lerpSpeed);
+            easeHealthSlider.value = Mathf.Lerp(easeHealthSlider.value, vida, lerpSpeed);
         }
-        
     }
 
-    /*private void OnTriggerEnter(Collider other)
+    private IEnumerator ActivarInmunidad()
     {
-        if (gameObject.CompareTag("Enemy"))
-        {
-            if (!inmune)
-            {
-                vida -= 10;
-                Debug.Log("Vida: " + vida);
-                StartCoroutine(ActivarInmunidad());
-            }
-        }
-    }*/
-    
-    private IEnumerator ActivarInmunidad(){
-   
         inmune = true;
+        // Usamos WaitForSecondsRealtime para que el tiempo de inmunidad 
+        // no se vea afectado si el juego se pausa
         yield return new WaitForSecondsRealtime(2);
         inmune = false;
-        
     }
 
     public void Curar()
     {
         vida = maxHealth;
     }
+
     public void quitarVida(float damage)
     {
         if (!inmune)
         {
             vida -= damage;
-            StartCoroutine(ActivarInmunidad());
+            Debug.Log("Vida actual: " + vida);
+
+            // COMPROBACIÓN DE DERROTA
+            if (vida <= 0)
+            {
+                vida = 0; // Para que la barra no baje de cero
+                Morir();
+            }
+            else
+            {
+                StartCoroutine(ActivarInmunidad());
+            }
+        }
+    }
+
+    private void Morir()
+    {
+        Debug.Log("El jugador ha muerto");
+        if (controlador != null)
+        {
+            controlador.ActivarDerrota();
         }
     }
 }

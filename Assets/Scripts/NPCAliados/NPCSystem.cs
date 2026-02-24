@@ -1,3 +1,4 @@
+using TMPro;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -8,6 +9,9 @@ public class NPCSystem : MonoBehaviour
 
     public GameObject Interactuar;
 
+    private string textoOriginal;
+    public TextMeshProUGUI luluMission;
+    public TextMeshProUGUI parsifalMission;
     // Escribe aqu� los di�logos de este NPC espec�fico en el Inspector
     [TextArea(3, 10)]
     public string[] npcLines;
@@ -27,11 +31,17 @@ public class NPCSystem : MonoBehaviour
             // Descomentar cuando esten implementados todos los NPCS
             if (this.gameObject.tag == "Lulu")
             {
+                textoOriginal = luluMission.text;
+                luluMission.text = "<s>" + textoOriginal + "</s>";
+                luluMission.color = Color.gray6;
                 PlayerHabilities playerA = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerHabilities>();
                 playerA.activeQ();
             }
             if (this.gameObject.tag == "Parsifal")
             {
+                textoOriginal =  parsifalMission.text;
+                parsifalMission.text = "<s>" +  textoOriginal + "</s>";
+                parsifalMission.color = Color.gray6;
                 PlayerHabilities playerA = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerHabilities>();
                 playerA.activeR();
             }

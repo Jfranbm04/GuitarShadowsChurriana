@@ -1,3 +1,4 @@
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.AI; 
@@ -13,12 +14,17 @@ public class EnemyController : MonoBehaviour
 
     [Header("Configuración de Jefe")]
     public bool esJefe = false;
+    public bool cigala = false;
+    public bool paquirrin = false;
     public Slider healthSlider;
     public Slider easeHealthSlider;
     private float lerpSpeed = 0.05f;
-
+    
     private NavMeshAgent agent; 
-
+    [Header ("Misiones Jefe")]
+    public TextMeshProUGUI textoCigala;
+    public TextMeshProUGUI textoPaquirrin;
+    private string textoOriginal;
     void Start()
     {
         vidaActual = vidaMaxima;
@@ -77,11 +83,29 @@ public class EnemyController : MonoBehaviour
 
     void Morir()
     {
+        
         if (esJefe && healthSlider != null)
         {
+            
             healthSlider.transform.parent.gameObject.SetActive(false);
+            
+        }
+
+        if (cigala)
+        {
+            textoOriginal = textoCigala.text;
+            textoCigala.text = "<s>" +  textoOriginal + "</s>";
+            textoCigala.color = Color.gray6;
+        }
+
+        if (paquirrin)
+        {
+            textoOriginal = textoPaquirrin.text;
+            textoPaquirrin.text = "<s>" +  textoOriginal + "</s>";
+            textoPaquirrin.color = Color.gray6;
         }
         Destroy(gameObject);
+        
     }
 
     public void Congelar(float duracion)

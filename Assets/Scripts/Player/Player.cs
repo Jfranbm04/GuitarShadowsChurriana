@@ -20,13 +20,13 @@ public class Player : MonoBehaviour
     void Start()
     {
         vida = maxHealth;
-        // Buscamos automáticamente el objeto que tiene el script ControladorJuego
+        // Buscamos automï¿½ticamente el objeto que tiene el script ControladorJuego
         controlador = Object.FindFirstObjectByType<ControladorJuego>();
     }
 
     void Update()
     {
-        // Actualización de las barras de vida
+        // Actualizaciï¿½n de las barras de vida
         if (healthSlider.value != vida)
         {
             healthSlider.value = vida;
@@ -57,9 +57,9 @@ public class Player : MonoBehaviour
         if (!inmune)
         {
             vida -= damage;
-            Debug.Log("Vida actual: " + vida);
+           
 
-            // COMPROBACIÓN DE DERROTA
+            // COMPROBACIï¿½N DE DERROTA
             if (vida <= 0)
             {
                 vida = 0; // Para que la barra no baje de cero

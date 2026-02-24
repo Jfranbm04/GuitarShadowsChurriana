@@ -11,7 +11,7 @@ public class PlayerMovement : MonoBehaviour
     public float rotationSpeed = 15f;
 
     [Header("Salto / Gravedad")]
-    public float jumpHeight = 3f;
+    public float jumpHeight = 0f;
     public float gravity = -9.81f;
 
     [SerializeField] private CharacterController characterController;
@@ -113,6 +113,28 @@ public class PlayerMovement : MonoBehaviour
         finalVelocity.y = verticalVelocity;
 
         characterController.Move(finalVelocity * Time.deltaTime);
+    }
+
+    // Esta función se ejecuta automáticamente cuando el CharacterController choca con algo
+    // Añade esto al final de la clase PlayerMovement
+    private void OnControllerColliderHit(ControllerColliderHit hit)
+    {
+        // 1. Verificamos si el objeto tiene el tag de enemigo
+        if (hit.gameObject.CompareTag("Enemy"))
+        {
+            // 2. Intentamos obtener el script "Player" que tiene la vida
+            // (Asumiendo que ambos scripts están en el mismo objeto)
+            Player scriptVida = GetComponent<Player>();
+
+            if (scriptVida != null)
+            {
+                // 3. Llamamos a tu función de daño
+                // Puedes cambiar el "10f" por el daño que prefieras
+                scriptVida.quitarVida(10f);
+
+                Debug.Log("Choque sólido con enemigo: quitando vida...");
+            }
+        }
     }
 
     private void ControlAnimacion()

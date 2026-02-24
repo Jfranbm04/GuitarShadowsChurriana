@@ -1,3 +1,4 @@
+using System.Collections;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -16,10 +17,12 @@ public class EnemyController : MonoBehaviour
     public bool esJefe = false;
     public bool cigala = false;
     public bool paquirrin = false;
+    private static bool cigalaVencido = false;
+    private static bool paquirrinVencido = false;
     public Slider healthSlider;
     public Slider easeHealthSlider;
     private float lerpSpeed = 0.05f;
-    
+    bool contadorIniciado = false;
     private NavMeshAgent agent; 
     [Header ("Misiones Jefe")]
     public TextMeshProUGUI textoCigala;
@@ -27,6 +30,7 @@ public class EnemyController : MonoBehaviour
     private string textoOriginal;
     void Start()
     {
+        
         vidaActual = vidaMaxima;
         agent = GetComponent<NavMeshAgent>(); 
 
@@ -41,6 +45,7 @@ public class EnemyController : MonoBehaviour
 
     void Update()
     {
+        ComprobarJefes();
         if (esJefe && healthSlider != null)
         {
             ActualizarVisualizacionHUD();
@@ -81,6 +86,16 @@ public class EnemyController : MonoBehaviour
         }
     }
 
+    public static bool ComprobarJefes()
+    {
+        if (paquirrinVencido && cigalaVencido)
+        {
+            return true;
+        }
+        return false;
+    }
+
+    
     void Morir()
     {
         
@@ -96,6 +111,8 @@ public class EnemyController : MonoBehaviour
             textoOriginal = textoCigala.text;
             textoCigala.text = "<s>" +  textoOriginal + "</s>";
             textoCigala.color = Color.gray6;
+            cigalaVencido = true;
+            Debug.Log(cigalaVencido);
         }
 
         if (paquirrin)
@@ -103,7 +120,10 @@ public class EnemyController : MonoBehaviour
             textoOriginal = textoPaquirrin.text;
             textoPaquirrin.text = "<s>" +  textoOriginal + "</s>";
             textoPaquirrin.color = Color.gray6;
+            paquirrinVencido = true;
+            Debug.Log(paquirrinVencido);
         }
+
         Destroy(gameObject);
         
     }

@@ -16,6 +16,9 @@ public class ControladorJuego : MonoBehaviour
     [SerializeField] private GameObject abilityQ;
     [SerializeField] private GameObject abilityR;
     [SerializeField] private GameObject CigalaHUD;
+    [SerializeField] private GameObject PaquirrinHUD;
+    [SerializeField] private GameObject QuestMenu;
+    //[SerializeField] private GameObject FaryHUD;
 
 
 
@@ -50,7 +53,9 @@ public class ControladorJuego : MonoBehaviour
         juegoPausado = false;
         pantallaPausa.SetActive(false);
         Time.timeScale = 1f;
-        SetEstadoHUD(true);
+
+        // Al reanudar, llamamos a la función pero con una lógica especial
+        ActualizarHUDAlReanudar();
     }
 
     // --- FUNCIÓN PARA MOSTRAR LA DERROTA ---
@@ -69,6 +74,24 @@ public class ControladorJuego : MonoBehaviour
         SceneManager.LoadScene(SceneManager.GetActiveScene().name);
     }
 
+
+
+    // Nueva función específica para reanudar
+    private void ActualizarHUDAlReanudar()
+    {
+        // Estos SIEMPRE se muestran al volver
+        if (healthBar != null) healthBar.SetActive(true);
+        if (minimapHolder != null) minimapHolder.SetActive(true);
+        if (QuestMenu != null) QuestMenu.SetActive(true);
+
+        // Estos se quedan APAGADOS (o puedes añadir lógica si quieres que dependan de algo)
+        if (abilityQ != null) abilityQ.SetActive(false);
+        if (abilityR != null) abilityR.SetActive(false);
+        if (CigalaHUD != null) CigalaHUD.SetActive(false);
+        if (PaquirrinHUD != null) PaquirrinHUD.SetActive(false);
+    }
+
+    // Modificamos esta para que solo la use Pausar y Derrota
     private void SetEstadoHUD(bool estado)
     {
         if (healthBar != null) healthBar.SetActive(estado);
@@ -76,6 +99,8 @@ public class ControladorJuego : MonoBehaviour
         if (abilityQ != null) abilityQ.SetActive(estado);
         if (abilityR != null) abilityR.SetActive(estado);
         if (CigalaHUD != null) CigalaHUD.SetActive(estado);
+        if (PaquirrinHUD != null) PaquirrinHUD.SetActive(estado);
+        if (QuestMenu != null) QuestMenu.SetActive(estado);
     }
 
     private void ConfirmarSeleccion()

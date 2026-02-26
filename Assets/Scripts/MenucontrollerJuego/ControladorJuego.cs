@@ -16,6 +16,9 @@ public class ControladorJuego : MonoBehaviour
     [SerializeField] private GameObject abilityQ;
     [SerializeField] private GameObject abilityR;
     [SerializeField] private GameObject CigalaHUD;
+    [SerializeField] private GameObject PaquirrinHUD;
+    [SerializeField] private GameObject QuestMenu;
+    //[SerializeField] private GameObject FaryHUD;
     [SerializeField] private AudioSource sonidojuego;
     [SerializeField] private Toggle musicaActiva;
 
@@ -61,7 +64,7 @@ public class ControladorJuego : MonoBehaviour
         juegoPausado = false;
         pantallaPausa.SetActive(false);
         Time.timeScale = 1f;
-        SetEstadoHUD(true);
+        ActualizarHUDAlReanudar();
     }
 
     // --- FUNCI�N PARA MOSTRAR LA DERROTA ---
@@ -80,6 +83,20 @@ public class ControladorJuego : MonoBehaviour
         Time.timeScale = 1f;
         SceneManager.LoadScene(SceneManager.GetActiveScene().name);
     }
+    
+    private void ActualizarHUDAlReanudar()
+    {
+        // Estos SIEMPRE se muestran al volver
+        if (healthBar != null) healthBar.SetActive(true);
+        if (minimapHolder != null) minimapHolder.SetActive(true);
+        if (QuestMenu != null) QuestMenu.SetActive(true);
+
+        // Estos se quedan APAGADOS (o puedes añadir lógica si quieres que dependan de algo)
+        if (abilityQ != null) abilityQ.SetActive(false);
+        if (abilityR != null) abilityR.SetActive(false);
+        if (CigalaHUD != null) CigalaHUD.SetActive(false);
+        if (PaquirrinHUD != null) PaquirrinHUD.SetActive(false);
+    }
 
     private void SetEstadoHUD(bool estado)
     {
@@ -88,6 +105,8 @@ public class ControladorJuego : MonoBehaviour
         if (abilityQ != null) abilityQ.SetActive(estado);
         if (abilityR != null) abilityR.SetActive(estado);
         if (CigalaHUD != null) CigalaHUD.SetActive(estado);
+        if (PaquirrinHUD != null) PaquirrinHUD.SetActive(estado);
+        if (QuestMenu != null) QuestMenu.SetActive(estado);
     }
 
     private void ConfirmarSeleccion()

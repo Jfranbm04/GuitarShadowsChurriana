@@ -29,7 +29,8 @@ public class PlayerHabilities : MonoBehaviour
     private bool QActive = false;
     private bool RActive = false;
     private float currentCooldownR;
-
+    [SerializeField] private AudioSource sonidoQ;
+    [SerializeField] private AudioSource sonidoR;
     public ParticleSystem Sparks;
 
     public GameObject sparksObject;
@@ -61,6 +62,10 @@ public class PlayerHabilities : MonoBehaviour
     {
         if (!QonCooldown && QActive)
         {
+            if (!sonidoQ.isPlaying && sonidoQ != null)
+            {
+                sonidoQ.Play();
+            }
             stunArea.SetActive(true);
             StartCoroutine(QCooldown());
            
@@ -74,6 +79,10 @@ public class PlayerHabilities : MonoBehaviour
     {
         if (!RonCooldown && RActive)
         {
+            if (!sonidoR.isPlaying && sonidoR != null)
+            {
+                sonidoR.Play();
+            }
             StartCoroutine(TemporalBuff());
            
         }

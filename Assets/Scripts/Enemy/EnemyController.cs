@@ -102,7 +102,7 @@ public class EnemyController : MonoBehaviour
         if (esJefe && healthSlider != null)
         {
             
-            healthSlider.transform.parent.gameObject.SetActive(false);
+            healthSlider.transform.parent.parent.gameObject.SetActive(false);
             
         }
 

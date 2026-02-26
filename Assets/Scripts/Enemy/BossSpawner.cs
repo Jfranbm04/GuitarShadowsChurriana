@@ -4,43 +4,75 @@ using UnityEngine;
 
 public class BossSpawner : MonoBehaviour
 {
-    private int timeleft = 10;
-    private int vecesLanzado = 0;
+    [Header("Configuración del Contador")]
+    public int timeleft = 10;
     public TextMeshProUGUI countdownText;
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
+
+    [Header("Referencia del Jefe")]
+    public GameObject faryEnEscena; // Arrastra al Fary (desactivado) desde la Jerarquía
+    public float distanciaSpawn = 5f;
+
+    private int vecesLanzado = 0;
+
     void Start()
     {
-        
+        // Nos aseguramos de que el texto esté oculto al empezar si quieres
+        if (countdownText != null) countdownText.gameObject.SetActive(false);
     }
 
-    // Update is called once per frame
     void Update()
     {
+        // Si la función estática dice que los jefes han muerto
         if (EnemyController.ComprobarJefes())
         {
             vecesLanzado++;
             if (vecesLanzado == 1)
             {
-                StartCoroutine(countdownJefe());   
+                StartCoroutine(countdownJefe());
             }
         }
     }
+
     private IEnumerator countdownJefe()
     {
-        Debug.Log("CountdownEmpezado");
+        Debug.Log("¡Cuenta atrás para el Fary iniciada!");
+
+        if (countdownText != null) countdownText.gameObject.SetActive(true);
+
         while (timeleft > 0)
         {
-            countdownText.text = timeleft.ToString();
+            if (countdownText != null) countdownText.text = timeleft.ToString();
             yield return new WaitForSeconds(1.0f);
             timeleft--;
         }
 
-        if (timeleft == 0)
+        // ACCIÓN FINAL: Aparece el jefe
+        AparecerJefe();
+    }
+
+    void AparecerJefe()
+    {
+        if (countdownText != null) countdownText.gameObject.SetActive(false);
+
+        // Localizamos al jugador
+        GameObject jugador = GameObject.FindGameObjectWithTag("Player");
+
+        if (jugador != null && faryEnEscena != null)
         {
-            countdownText.gameObject.SetActive(false);
-            //Jefe aparece
+            // Calculamos la posición: misma X, misma Y, pero Z + 5
+            Vector3 posJugador = jugador.transform.position;
+            Vector3 posicionFinal = new Vector3(posJugador.x, posJugador.y, posJugador.z + distanciaSpawn);
+
+            // Movemos al Fary a su sitio y lo despertamos
+            faryEnEscena.transform.position = posicionFinal;
+            faryEnEscena.SetActive(true);
+
+            // Al activarse, el script FaryAI ejecutará su OnEnable automáticamente
+            Debug.Log("¡EL FARY HA APARECIDO!");
         }
-        
-        
+        else
+        {
+            Debug.LogWarning("Ojo: No se ha encontrado al Jugador o el objeto FaryEnEscena no está asignado.");
+        }
     }
 }

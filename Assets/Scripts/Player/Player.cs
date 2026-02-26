@@ -16,7 +16,8 @@ public class Player : MonoBehaviour
 
     // Referencia al controlador de la escena
     private ControladorJuego controlador;
-
+    [SerializeField] AudioSource sonidoDamage;
+    [SerializeField] AudioSource sonidoLose;
     void Start()
     {
         vida = maxHealth;
@@ -56,6 +57,10 @@ public class Player : MonoBehaviour
     {
         if (!inmune)
         {
+            if (!sonidoDamage.isPlaying && sonidoDamage != null)
+            {
+                sonidoDamage.Play();
+            }
             vida -= damage;
            
 
@@ -74,6 +79,7 @@ public class Player : MonoBehaviour
 
     private void Morir()
     {
+        sonidoLose.Play();
         Debug.Log("El jugador ha muerto");
         if (controlador != null)
         {

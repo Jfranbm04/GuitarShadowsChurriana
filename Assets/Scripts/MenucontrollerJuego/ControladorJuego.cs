@@ -16,13 +16,22 @@ public class ControladorJuego : MonoBehaviour
     [SerializeField] private GameObject abilityQ;
     [SerializeField] private GameObject abilityR;
     [SerializeField] private GameObject CigalaHUD;
-
-
+    [SerializeField] private AudioSource sonidojuego;
+    [SerializeField] private Toggle musicaActiva;
 
     private bool juegoPausado = false;
 
     void Update()
     {
+        if (musicaActiva.isOn && !sonidojuego.isPlaying)
+        {
+            sonidojuego.Play();
+        }
+
+        if (!musicaActiva.isOn)
+        {
+            sonidojuego.Pause();
+        }
         // Abrir/Cerrar Pausa con Escape
         if (Keyboard.current != null && Keyboard.current.escapeKey.wasPressedThisFrame)
         {
@@ -30,7 +39,7 @@ public class ControladorJuego : MonoBehaviour
             else PausarJuego();
         }
 
-        // Confirmar selección con Enter (solo si está pausado o en derrota)
+        // Confirmar selecciï¿½n con Enter (solo si estï¿½ pausado o en derrota)
         if (juegoPausado && Keyboard.current.enterKey.wasPressedThisFrame)
         {
             ConfirmarSeleccion();
@@ -43,19 +52,22 @@ public class ControladorJuego : MonoBehaviour
         pantallaPausa.SetActive(true);
         Time.timeScale = 0f;
         SetEstadoHUD(false);
+        sonidojuego.Pause();
     }
 
     public void ReanudarJuego()
     {
+        sonidojuego.Play();
         juegoPausado = false;
         pantallaPausa.SetActive(false);
         Time.timeScale = 1f;
         SetEstadoHUD(true);
     }
 
-    // --- FUNCIÓN PARA MOSTRAR LA DERROTA ---
+    // --- FUNCIï¿½N PARA MOSTRAR LA DERROTA ---
     public void ActivarDerrota()
     {
+        sonidojuego.Pause();
         juegoPausado = true; // Permite usar el Enter en esta pantalla
         pantallaDerrota.SetActive(true);
         Time.timeScale = 0f; // Detiene el juego

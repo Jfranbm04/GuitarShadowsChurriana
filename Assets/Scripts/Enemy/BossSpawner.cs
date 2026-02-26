@@ -41,7 +41,7 @@ public class BossSpawner : MonoBehaviour
 
         while (timeleft > 0)
         {
-            if (countdownText != null) countdownText.text = timeleft.ToString();
+            if (countdownText != null) countdownText.text = "Cuidado!! Alguien está apatrullando la ciudad... "+timeleft.ToString();
             yield return new WaitForSeconds(1.0f);
             timeleft--;
         }

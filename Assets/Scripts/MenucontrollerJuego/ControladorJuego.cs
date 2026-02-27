@@ -20,9 +20,32 @@ public class ControladorJuego : MonoBehaviour
     [SerializeField] private GameObject QuestMenu;
     //[SerializeField] private GameObject FaryHUD;
 
+    [Header("Referencias Externas")]
+    [SerializeField] private PlayerHabilities playerHabilities;
 
+    [Header("Ajustes de Sonido")]
+    [SerializeField] private AudioSource musicaFondo; // Arrastra aquí el objeto que tiene la música
+    [SerializeField] private Toggle toggleMusica;    // Arrastra aquí el Toggle del menú de pausa
 
     private bool juegoPausado = false;
+
+    void Start()
+    {
+        if (musicaFondo != null && toggleMusica != null)
+        {
+            toggleMusica.isOn = musicaFondo.mute == false; // Si no está muteado, el check está marcado
+            toggleMusica.onValueChanged.AddListener(ControlarMusica);
+        }
+    }
+
+    public void ControlarMusica(bool estado)
+    {
+        if (musicaFondo != null)
+        {
+            // Si 'estado' es true (marcado), mute es false (suena)
+            musicaFondo.mute = !estado;
+        }
+    }
 
     void Update()
     {
@@ -79,18 +102,29 @@ public class ControladorJuego : MonoBehaviour
     // Nueva función específica para reanudar
     private void ActualizarHUDAlReanudar()
     {
-        // Estos SIEMPRE se muestran al volver
+        // Elementos básicos que siempre vuelven
         if (healthBar != null) healthBar.SetActive(true);
         if (minimapHolder != null) minimapHolder.SetActive(true);
         if (QuestMenu != null) QuestMenu.SetActive(true);
 
-        // Estos se quedan APAGADOS (o puedes añadir lógica si quieres que dependan de algo)
-        if (abilityQ != null) abilityQ.SetActive(false);
-        if (abilityR != null) abilityR.SetActive(false);
+        // Lógica condicional para habilidades
+        if (playerHabilities != null)
+        {
+            // Solo se activan si están desbloqueadas/activas en el script del jugador
+            if (abilityQ != null) abilityQ.SetActive(playerHabilities.QActive);
+            if (abilityR != null) abilityR.SetActive(playerHabilities.RActive);
+        }
+        else
+        {
+            // Opcional: Si no encuentras el script, por defecto las dejamos apagadas
+            if (abilityQ != null) abilityQ.SetActive(false);
+            if (abilityR != null) abilityR.SetActive(false);
+        }
+
+        // Otros elementos que mencionaste que quedan apagados
         if (CigalaHUD != null) CigalaHUD.SetActive(false);
         if (PaquirrinHUD != null) PaquirrinHUD.SetActive(false);
     }
-
     // Modificamos esta para que solo la use Pausar y Derrota
     private void SetEstadoHUD(bool estado)
     {

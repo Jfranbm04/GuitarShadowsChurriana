@@ -83,7 +83,7 @@ public class ControladorJuego : MonoBehaviour
         Time.timeScale = 1f;
         SceneManager.LoadScene(SceneManager.GetActiveScene().name);
     }
-
+    
     private void ActualizarHUDAlReanudar()
     {
         // Estos SIEMPRE se muestran al volver

@@ -19,7 +19,8 @@ public class Player : MonoBehaviour
     [SerializeField] private AudioSource sonidoMuerte; // Arrastra el AudioSource de muerte
 
     private ControladorJuego controlador;
-
+    [SerializeField] AudioSource sonidoDamage;
+    [SerializeField] AudioSource sonidoLose;
     void Start()
     {
         vida = maxHealth;
@@ -55,6 +56,10 @@ public class Player : MonoBehaviour
     {
         if (!inmune)
         {
+            if (!sonidoDamage.isPlaying && sonidoDamage != null)
+            {
+                sonidoDamage.Play();
+            }
             vida -= damage;
 
             if (vida <= 0)
@@ -77,6 +82,7 @@ public class Player : MonoBehaviour
 
     private void Morir()
     {
+        sonidoLose.Play();
         Debug.Log("El jugador ha muerto");
 
         // REPRODUCIR SONIDO DE MUERTE

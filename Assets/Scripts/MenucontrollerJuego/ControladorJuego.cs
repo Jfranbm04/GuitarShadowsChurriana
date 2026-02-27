@@ -1,4 +1,4 @@
-using UnityEngine;
+ï»¿using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.InputSystem;
 using UnityEngine.UI;
@@ -19,13 +19,22 @@ public class ControladorJuego : MonoBehaviour
     [SerializeField] private GameObject PaquirrinHUD;
     [SerializeField] private GameObject QuestMenu;
     //[SerializeField] private GameObject FaryHUD;
-
-
+    [SerializeField] private AudioSource sonidojuego;
+    [SerializeField] private Toggle musicaActiva;
 
     private bool juegoPausado = false;
 
     void Update()
     {
+        if (musicaActiva.isOn && !sonidojuego.isPlaying)
+        {
+            sonidojuego.Play();
+        }
+
+        if (!musicaActiva.isOn)
+        {
+            sonidojuego.Pause();
+        }
         // Abrir/Cerrar Pausa con Escape
         if (Keyboard.current != null && Keyboard.current.escapeKey.wasPressedThisFrame)
         {
@@ -33,7 +42,7 @@ public class ControladorJuego : MonoBehaviour
             else PausarJuego();
         }
 
-        // Confirmar selección con Enter (solo si está pausado o en derrota)
+        // Confirmar selecciï¿½n con Enter (solo si estï¿½ pausado o en derrota)
         if (juegoPausado && Keyboard.current.enterKey.wasPressedThisFrame)
         {
             ConfirmarSeleccion();
@@ -46,21 +55,22 @@ public class ControladorJuego : MonoBehaviour
         pantallaPausa.SetActive(true);
         Time.timeScale = 0f;
         SetEstadoHUD(false);
+        sonidojuego.Pause();
     }
 
     public void ReanudarJuego()
     {
+        sonidojuego.Play();
         juegoPausado = false;
         pantallaPausa.SetActive(false);
         Time.timeScale = 1f;
-
-        // Al reanudar, llamamos a la función pero con una lógica especial
         ActualizarHUDAlReanudar();
     }
 
-    // --- FUNCIÓN PARA MOSTRAR LA DERROTA ---
+    // --- FUNCIï¿½N PARA MOSTRAR LA DERROTA ---
     public void ActivarDerrota()
     {
+        sonidojuego.Pause();
         juegoPausado = true; // Permite usar el Enter en esta pantalla
         pantallaDerrota.SetActive(true);
         Time.timeScale = 0f; // Detiene el juego
@@ -74,9 +84,6 @@ public class ControladorJuego : MonoBehaviour
         SceneManager.LoadScene(SceneManager.GetActiveScene().name);
     }
 
-
-
-    // Nueva función específica para reanudar
     private void ActualizarHUDAlReanudar()
     {
         // Estos SIEMPRE se muestran al volver
@@ -84,14 +91,13 @@ public class ControladorJuego : MonoBehaviour
         if (minimapHolder != null) minimapHolder.SetActive(true);
         if (QuestMenu != null) QuestMenu.SetActive(true);
 
-        // Estos se quedan APAGADOS (o puedes añadir lógica si quieres que dependan de algo)
+        // Estos se quedan APAGADOS (o puedes aÃ±adir lÃ³gica si quieres que dependan de algo)
         if (abilityQ != null) abilityQ.SetActive(false);
         if (abilityR != null) abilityR.SetActive(false);
         if (CigalaHUD != null) CigalaHUD.SetActive(false);
         if (PaquirrinHUD != null) PaquirrinHUD.SetActive(false);
     }
 
-    // Modificamos esta para que solo la use Pausar y Derrota
     private void SetEstadoHUD(bool estado)
     {
         if (healthBar != null) healthBar.SetActive(estado);
@@ -121,8 +127,8 @@ public class ControladorJuego : MonoBehaviour
     public void SalirDelJuego()
     {
         Application.Quit();
-        #if UNITY_EDITOR
-                UnityEditor.EditorApplication.isPlaying = false;
-        #endif
+#if UNITY_EDITOR
+        UnityEditor.EditorApplication.isPlaying = false;
+#endif
     }
 }

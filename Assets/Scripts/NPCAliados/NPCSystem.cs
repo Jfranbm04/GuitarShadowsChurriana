@@ -12,6 +12,7 @@ public class NPCSystem : MonoBehaviour
     private string textoOriginal;
     public TextMeshProUGUI luluMission;
     public TextMeshProUGUI parsifalMission;
+    public TextMeshProUGUI SergeyMission;
     // Escribe aqu� los di�logos de este NPC espec�fico en el Inspector
     [TextArea(3, 10)]
     public string[] npcLines;
@@ -25,6 +26,9 @@ public class NPCSystem : MonoBehaviour
         {
             if (this.gameObject.tag == "Sergey")
             {
+                textoOriginal = SergeyMission.text;
+                SergeyMission.text = "<s>" + textoOriginal + "</s>";
+                SergeyMission.color = Color.gray6;
                 Player player = GameObject.FindGameObjectWithTag("Player").GetComponent<Player>();
                 player.Curar();
             }

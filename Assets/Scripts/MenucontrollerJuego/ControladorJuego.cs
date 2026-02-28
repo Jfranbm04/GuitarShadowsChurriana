@@ -18,7 +18,7 @@ public class ControladorJuego : MonoBehaviour
     [SerializeField] private GameObject CigalaHUD;
     [SerializeField] private GameObject PaquirrinHUD;
     [SerializeField] private GameObject QuestMenu;
-    //[SerializeField] private GameObject FaryHUD;
+    [SerializeField] private GameObject FaryHUD; // Ya lo he añadido :)
 
     [Header("Referencias Externas")]
     [SerializeField] private PlayerHabilities playerHabilities;
@@ -121,9 +121,9 @@ public class ControladorJuego : MonoBehaviour
             if (abilityR != null) abilityR.SetActive(false);
         }
 
-        // Otros elementos que mencionaste que quedan apagados
         if (CigalaHUD != null) CigalaHUD.SetActive(false);
         if (PaquirrinHUD != null) PaquirrinHUD.SetActive(false);
+        if (FaryHUD != null) FaryHUD.SetActive(false);
     }
     // Modificamos esta para que solo la use Pausar y Derrota
     private void SetEstadoHUD(bool estado)
@@ -134,6 +134,7 @@ public class ControladorJuego : MonoBehaviour
         if (abilityR != null) abilityR.SetActive(estado);
         if (CigalaHUD != null) CigalaHUD.SetActive(estado);
         if (PaquirrinHUD != null) PaquirrinHUD.SetActive(estado);
+        if (FaryHUD != null) FaryHUD.SetActive(estado);
         if (QuestMenu != null) QuestMenu.SetActive(estado);
     }
 

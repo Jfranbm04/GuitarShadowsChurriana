@@ -27,6 +27,7 @@ public class EnemyController : MonoBehaviour
     [Header ("Misiones Jefe")]
     public TextMeshProUGUI textoCigala;
     public TextMeshProUGUI textoPaquirrin;
+    public GameObject muroBloqueo;
     private string textoOriginal;
     void Start()
     {
@@ -113,6 +114,9 @@ public class EnemyController : MonoBehaviour
             textoCigala.color = Color.gray6;
             cigalaVencido = true;
             Debug.Log(cigalaVencido);
+
+            // OCULTAR MURO
+            if (muroBloqueo != null) muroBloqueo.SetActive(false);
         }
 
         if (paquirrin)
@@ -122,6 +126,9 @@ public class EnemyController : MonoBehaviour
             textoPaquirrin.color = Color.gray6;
             paquirrinVencido = true;
             Debug.Log(paquirrinVencido);
+
+            // VOLVER A ACTIVAR MURO
+            if (muroBloqueo != null) muroBloqueo.SetActive(true);
         }
 
         Destroy(gameObject);

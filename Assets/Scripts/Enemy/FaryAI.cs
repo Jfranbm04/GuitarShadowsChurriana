@@ -30,18 +30,28 @@ public class FaryAI : MonoBehaviour
 
     IEnumerator SecuenciaAparicion()
     {
-        // 1. Nos aseguramos de que no se mueva durante la animación
-        if (agent != null)
+        // 1. Esperamos un frame para que el NavMeshAgent se posicione bien en el mapa
+        yield return null;
+
+        if (agent != null && agent.isActiveAndEnabled)
         {
+            // 2. Intentamos colocar al agente en el NavMesh más cercano por si acaso
+            NavMeshHit hit;
+            if (NavMesh.SamplePosition(transform.position, out hit, 2.0f, NavMesh.AllAreas))
+            {
+                agent.Warp(hit.position);
+            }
+
+            // 3. Ahora sí, lo paramos de forma segura
             agent.isStopped = true;
             agent.velocity = Vector3.zero;
         }
 
-        // 2. Esperamos los 3 segundos de rigor
+        // 4. Esperamos los 3 segundos de rigor
         yield return new WaitForSeconds(3f);
 
-        // 3. Activamos la persecución eterna
-        if (agent != null && agent.isOnNavMesh)
+        // 5. ¡A por el jugador!
+        if (agent != null && agent.isActiveAndEnabled)
         {
             agent.isStopped = false;
             puedePerseguir = true;

@@ -17,6 +17,7 @@ public class EnemyController : MonoBehaviour
     public bool esJefe = false;
     public bool cigala = false;
     public bool paquirrin = false;
+    public bool fary = false;
     private static bool cigalaVencido = false;
     private static bool paquirrinVencido = false;
     public Slider healthSlider;
@@ -129,6 +130,16 @@ public class EnemyController : MonoBehaviour
 
             // VOLVER A ACTIVAR MURO
             if (muroBloqueo != null) muroBloqueo.SetActive(true);
+        }
+
+        if (fary)
+        {
+            // Buscamos el controlador y activamos la victoria
+            ControladorJuego controlador = Object.FindFirstObjectByType<ControladorJuego>();
+            if (controlador != null)
+            {
+                controlador.ActivarVictoria();
+            }
         }
 
         Destroy(gameObject);

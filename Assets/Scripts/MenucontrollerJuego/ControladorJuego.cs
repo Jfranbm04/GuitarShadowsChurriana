@@ -18,7 +18,8 @@ public class ControladorJuego : MonoBehaviour
     [SerializeField] private GameObject CigalaHUD;
     [SerializeField] private GameObject PaquirrinHUD;
     [SerializeField] private GameObject QuestMenu;
-    [SerializeField] private GameObject FaryHUD; // Ya lo he añadido :)
+    [SerializeField] private GameObject FaryHUD;
+    [SerializeField] private GameObject pantallaVictoria;
 
     [Header("Referencias Externas")]
     [SerializeField] private PlayerHabilities playerHabilities;
@@ -159,5 +160,13 @@ public class ControladorJuego : MonoBehaviour
         #if UNITY_EDITOR
                 UnityEditor.EditorApplication.isPlaying = false;
         #endif
+    }
+
+    public void ActivarVictoria()
+    {
+        juegoPausado = true;
+        pantallaVictoria.SetActive(true);
+        Time.timeScale = 0f; 
+        SetEstadoHUD(false);
     }
 }

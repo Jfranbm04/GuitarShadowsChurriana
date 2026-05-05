@@ -534,8 +534,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: Controles
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: c8e484b2049050143ab84930cee8dc4e, type: 2}
-  m_sharedMaterial: {fileID: 1130985998133918622, guid: c8e484b2049050143ab84930cee8dc4e, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: fa58bb2ce509c634e863b641eedddad2, type: 2}
+  m_sharedMaterial: {fileID: -7524388165273762814, guid: fa58bb2ce509c634e863b641eedddad2, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -1080,8 +1080,8 @@ MonoBehaviour:
 
 '
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: c8e484b2049050143ab84930cee8dc4e, type: 2}
-  m_sharedMaterial: {fileID: 1130985998133918622, guid: c8e484b2049050143ab84930cee8dc4e, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: fa58bb2ce509c634e863b641eedddad2, type: 2}
+  m_sharedMaterial: {fileID: -7524388165273762814, guid: fa58bb2ce509c634e863b641eedddad2, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -5417,8 +5417,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: Nueva Partida
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: c8e484b2049050143ab84930cee8dc4e, type: 2}
-  m_sharedMaterial: {fileID: 1130985998133918622, guid: c8e484b2049050143ab84930cee8dc4e, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: fa58bb2ce509c634e863b641eedddad2, type: 2}
+  m_sharedMaterial: {fileID: -7524388165273762814, guid: fa58bb2ce509c634e863b641eedddad2, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []

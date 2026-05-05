@@ -9,8 +9,8 @@ public class EnemyAI : MonoBehaviour
     public float radioDeZona = 20f;
 
     [Header("Detección del Jugador")]
-    public float radioDeteccion = 5f; 
-    public string tagJugador = "Player"; 
+    public float radioDeteccion = 5f;
+    public string tagJugador = "Player";
     private Transform playerTransform;
     private bool siguiendoAlJugador = false;
 
@@ -18,9 +18,13 @@ public class EnemyAI : MonoBehaviour
     public float tiempoEspera = 2f;
     private NavMeshAgent agent;
 
+    [Header("Animación")]
+    private Animator anim;
+
     void Start()
     {
         agent = GetComponent<NavMeshAgent>();
+        anim = GetComponent<Animator>(); // Obtenemos el componente Animator
 
         // Buscamos al jugador automáticamente por su etiqueta
         GameObject jugador = GameObject.FindGameObjectWithTag(tagJugador);
@@ -39,6 +43,19 @@ public class EnemyAI : MonoBehaviour
     void Update()
     {
         ComprobarDistanciaJugador();
+        ActualizarAnimaciones(); // Llamamos a la función de animación
+    }
+
+    void ActualizarAnimaciones()
+    {
+        if (anim != null && agent != null)
+        {
+            // Calculamos la velocidad actual del agente
+            float velocidadActual = agent.velocity.magnitude;
+
+            // Enviamos el valor al parámetro "Velocidad" del Blend Tree
+            anim.SetFloat("Velocidad", velocidadActual);
+        }
     }
 
     void ComprobarDistanciaJugador()
@@ -49,18 +66,16 @@ public class EnemyAI : MonoBehaviour
 
         if (distancia <= radioDeteccion)
         {
-            // ESTADO: PERSEGUIR
             siguiendoAlJugador = true;
             agent.SetDestination(playerTransform.position);
-            agent.stoppingDistance = 1.2f; // Se detiene un poco antes de chocar para que la animación se vea bien
+            agent.stoppingDistance = 1.2f;
         }
         else
         {
-            // ESTADO: VOLVER A PATRULLAR
             if (siguiendoAlJugador)
             {
                 siguiendoAlJugador = false;
-                agent.stoppingDistance = 0f; // Resetear distancia para que llegue bien a los puntos de patrulla
+                agent.stoppingDistance = 0f;
             }
         }
     }
@@ -69,13 +84,11 @@ public class EnemyAI : MonoBehaviour
     {
         while (true)
         {
-            // Si NO estamos siguiendo al jugador, buscamos puntos aleatorios
             if (!siguiendoAlJugador)
             {
                 Vector3 destino = GenerarPuntoEnZona(centroDeZona.position, radioDeZona);
                 agent.SetDestination(destino);
 
-                // Esperar a llegar, pero interrumpir si ve al jugador
                 while (!siguiendoAlJugador && (agent.pathPending || agent.remainingDistance > 0.5f))
                 {
                     yield return null;
@@ -86,17 +99,14 @@ public class EnemyAI : MonoBehaviour
             }
             else
             {
-                // Si está persiguiendo, esperamos un frame y volvemos a chequear
                 yield return null;
             }
         }
     }
+
     private void OnDrawGizmosSelected()
     {
-        // Color de la esfera
         Gizmos.color = Color.yellow;
-
-        // Dibuja una esfera de alambre con el radio de detección
         Gizmos.DrawWireSphere(transform.position, radioDeteccion);
 
         if (centroDeZona != null)
@@ -105,6 +115,7 @@ public class EnemyAI : MonoBehaviour
             Gizmos.DrawWireSphere(centroDeZona.position, radioDeZona);
         }
     }
+
     Vector3 GenerarPuntoEnZona(Vector3 centro, float radio)
     {
         Vector3 direccionAleatoria = Random.insideUnitSphere * radio;

@@ -14,20 +14,21 @@ public class Player : MonoBehaviour
     private bool inmune = false;
     private float lerpSpeed = 0.05f;
 
-    // Referencia al controlador de la escena
+    [Header("Efectos de Sonido")]
+    [SerializeField] private AudioSource sonidoDano;   // Arrastra el AudioSource de daño
+    [SerializeField] private AudioSource sonidoMuerte; // Arrastra el AudioSource de muerte
+
     private ControladorJuego controlador;
     [SerializeField] AudioSource sonidoDamage;
     [SerializeField] AudioSource sonidoLose;
     void Start()
     {
         vida = maxHealth;
-        // Buscamos autom�ticamente el objeto que tiene el script ControladorJuego
         controlador = Object.FindFirstObjectByType<ControladorJuego>();
     }
 
     void Update()
     {
-        // Actualizaci�n de las barras de vida
         if (healthSlider.value != vida)
         {
             healthSlider.value = vida;
@@ -42,8 +43,6 @@ public class Player : MonoBehaviour
     private IEnumerator ActivarInmunidad()
     {
         inmune = true;
-        // Usamos WaitForSecondsRealtime para que el tiempo de inmunidad 
-        // no se vea afectado si el juego se pausa
         yield return new WaitForSecondsRealtime(2);
         inmune = false;
     }
@@ -62,16 +61,20 @@ public class Player : MonoBehaviour
                 sonidoDamage.Play();
             }
             vida -= damage;
-           
 
-            // COMPROBACI�N DE DERROTA
             if (vida <= 0)
             {
-                vida = 0; // Para que la barra no baje de cero
+                vida = 0;
                 Morir();
             }
             else
             {
+                // REPRODUCIR SONIDO DE DAÑO
+                if (sonidoDano != null)
+                {
+                    sonidoDano.Play();
+                }
+
                 StartCoroutine(ActivarInmunidad());
             }
         }
@@ -81,6 +84,13 @@ public class Player : MonoBehaviour
     {
         sonidoLose.Play();
         Debug.Log("El jugador ha muerto");
+
+        // REPRODUCIR SONIDO DE MUERTE
+        if (sonidoMuerte != null)
+        {
+            sonidoMuerte.Play();
+        }
+
         if (controlador != null)
         {
             controlador.ActivarDerrota();

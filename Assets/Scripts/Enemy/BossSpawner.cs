@@ -8,45 +8,42 @@ public class BossSpawner : MonoBehaviour
     public int timeleft = 10;
     public TextMeshProUGUI countdownText;
 
-    [Header("Referencia del Jefe")]
-    public GameObject faryEnEscena; // Arrastra al Fary (desactivado) desde la Jerarquía
+    [Header("Referencia del Jefe y HUD")]
+    public GameObject faryEnEscena; // El objeto "fary" de la jerarquía
+    public GameObject faryHUD;      // Arrastra aquí el Canvas/Objeto del HUD
     public float distanciaSpawn = 5f;
 
-    private int vecesLanzado = 0;
+    private bool yaHaEmpezado = false;
 
     void Start()
     {
-        // Nos aseguramos de que el texto esté oculto al empezar si quieres
         if (countdownText != null) countdownText.gameObject.SetActive(false);
+        if (faryHUD != null) faryHUD.SetActive(false); // Aseguramos que empiece apagado
     }
 
     void Update()
     {
-        // Si la función estática dice que los jefes han muerto
-        if (EnemyController.ComprobarJefes())
+        // Solo lanzamos la cuenta atrás si los jefes han muerto y no lo hemos hecho ya
+        if (!yaHaEmpezado && EnemyController.ComprobarJefes())
         {
-            vecesLanzado++;
-            if (vecesLanzado == 1)
-            {
-                StartCoroutine(countdownJefe());
-            }
+            yaHaEmpezado = true;
+            StartCoroutine(countdownJefe());
         }
     }
 
     private IEnumerator countdownJefe()
     {
-        Debug.Log("¡Cuenta atrás para el Fary iniciada!");
-
         if (countdownText != null) countdownText.gameObject.SetActive(true);
 
         while (timeleft > 0)
         {
-            if (countdownText != null) countdownText.text = "Cuidado!! Alguien está apatrullando la ciudad... "+timeleft.ToString();
+            if (countdownText != null)
+                countdownText.text = "¡Cuidado! Alguien está apatrullando la ciudad... " + timeleft.ToString();
+
             yield return new WaitForSeconds(1.0f);
             timeleft--;
         }
 
-        // ACCIÓN FINAL: Aparece el jefe
         AparecerJefe();
     }
 
@@ -54,25 +51,30 @@ public class BossSpawner : MonoBehaviour
     {
         if (countdownText != null) countdownText.gameObject.SetActive(false);
 
-        // Localizamos al jugador
         GameObject jugador = GameObject.FindGameObjectWithTag("Player");
 
         if (jugador != null && faryEnEscena != null)
         {
-            // Calculamos la posición: misma X, misma Y, pero Z + 5
+            // 1. Posicionamiento en la Z del jugador + 5m
             Vector3 posJugador = jugador.transform.position;
             Vector3 posicionFinal = new Vector3(posJugador.x, posJugador.y, posJugador.z + distanciaSpawn);
 
-            // Movemos al Fary a su sitio y lo despertamos
             faryEnEscena.transform.position = posicionFinal;
+
+            // 2. Activamos al Jefe
             faryEnEscena.SetActive(true);
 
-            // Al activarse, el script FaryAI ejecutará su OnEnable automáticamente
-            Debug.Log("¡EL FARY HA APARECIDO!");
+            // 3. Activamos el HUD del jefe
+            if (faryHUD != null)
+            {
+                faryHUD.SetActive(true);
+            }
+
+            Debug.Log("¡EL FARY HA APARECIDO Y EL HUD ESTÁ ACTIVO!");
         }
         else
         {
-            Debug.LogWarning("Ojo: No se ha encontrado al Jugador o el objeto FaryEnEscena no está asignado.");
+            Debug.LogWarning("Faltan referencias: Jugador o FaryEnEscena.");
         }
     }
 }

@@ -1,4 +1,4 @@
-ï»¿using UnityEngine;
+using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.InputSystem;
 using UnityEngine.UI;
@@ -18,23 +18,38 @@ public class ControladorJuego : MonoBehaviour
     [SerializeField] private GameObject CigalaHUD;
     [SerializeField] private GameObject PaquirrinHUD;
     [SerializeField] private GameObject QuestMenu;
-    //[SerializeField] private GameObject FaryHUD;
-    [SerializeField] private AudioSource sonidojuego;
-    [SerializeField] private Toggle musicaActiva;
+    [SerializeField] private GameObject FaryHUD;
+    [SerializeField] private GameObject pantallaVictoria;
+
+    [Header("Referencias Externas")]
+    [SerializeField] private PlayerHabilities playerHabilities;
+
+    [Header("Ajustes de Sonido")]
+    [SerializeField] private AudioSource musicaFondo; // Arrastra aquí el objeto que tiene la música
+    [SerializeField] private Toggle toggleMusica;    // Arrastra aquí el Toggle del menú de pausa
 
     private bool juegoPausado = false;
 
+    void Start()
+    {
+        if (musicaFondo != null && toggleMusica != null)
+        {
+            toggleMusica.isOn = musicaFondo.mute == false; // Si no está muteado, el check está marcado
+            toggleMusica.onValueChanged.AddListener(ControlarMusica);
+        }
+    }
+
+    public void ControlarMusica(bool estado)
+    {
+        if (musicaFondo != null)
+        {
+            // Si 'estado' es true (marcado), mute es false (suena)
+            musicaFondo.mute = !estado;
+        }
+    }
+
     void Update()
     {
-        if (musicaActiva.isOn && !sonidojuego.isPlaying)
-        {
-            sonidojuego.Play();
-        }
-
-        if (!musicaActiva.isOn)
-        {
-            sonidojuego.Pause();
-        }
         // Abrir/Cerrar Pausa con Escape
         if (Keyboard.current != null && Keyboard.current.escapeKey.wasPressedThisFrame)
         {
@@ -42,7 +57,7 @@ public class ControladorJuego : MonoBehaviour
             else PausarJuego();
         }
 
-        // Confirmar selecciï¿½n con Enter (solo si estï¿½ pausado o en derrota)
+        // Confirmar selección con Enter (solo si está pausado o en derrota)
         if (juegoPausado && Keyboard.current.enterKey.wasPressedThisFrame)
         {
             ConfirmarSeleccion();
@@ -55,22 +70,21 @@ public class ControladorJuego : MonoBehaviour
         pantallaPausa.SetActive(true);
         Time.timeScale = 0f;
         SetEstadoHUD(false);
-        sonidojuego.Pause();
     }
 
     public void ReanudarJuego()
     {
-        sonidojuego.Play();
         juegoPausado = false;
         pantallaPausa.SetActive(false);
         Time.timeScale = 1f;
+
+        // Al reanudar, llamamos a la función pero con una lógica especial
         ActualizarHUDAlReanudar();
     }
 
-    // --- FUNCIï¿½N PARA MOSTRAR LA DERROTA ---
+    // --- FUNCIÓN PARA MOSTRAR LA DERROTA ---
     public void ActivarDerrota()
     {
-        sonidojuego.Pause();
         juegoPausado = true; // Permite usar el Enter en esta pantalla
         pantallaDerrota.SetActive(true);
         Time.timeScale = 0f; // Detiene el juego
@@ -83,21 +97,36 @@ public class ControladorJuego : MonoBehaviour
         Time.timeScale = 1f;
         SceneManager.LoadScene(SceneManager.GetActiveScene().name);
     }
-    
+
+
+
+    // Nueva función específica para reanudar
     private void ActualizarHUDAlReanudar()
     {
-        // Estos SIEMPRE se muestran al volver
+        // Elementos básicos que siempre vuelven
         if (healthBar != null) healthBar.SetActive(true);
         if (minimapHolder != null) minimapHolder.SetActive(true);
         if (QuestMenu != null) QuestMenu.SetActive(true);
 
-        // Estos se quedan APAGADOS (o puedes aÃ±adir lÃ³gica si quieres que dependan de algo)
-        if (abilityQ != null) abilityQ.SetActive(false);
-        if (abilityR != null) abilityR.SetActive(false);
+        // Lógica condicional para habilidades
+        if (playerHabilities != null)
+        {
+            // Solo se activan si están desbloqueadas/activas en el script del jugador
+            if (abilityQ != null) abilityQ.SetActive(playerHabilities.QActive);
+            if (abilityR != null) abilityR.SetActive(playerHabilities.RActive);
+        }
+        else
+        {
+            // Opcional: Si no encuentras el script, por defecto las dejamos apagadas
+            if (abilityQ != null) abilityQ.SetActive(false);
+            if (abilityR != null) abilityR.SetActive(false);
+        }
+
         if (CigalaHUD != null) CigalaHUD.SetActive(false);
         if (PaquirrinHUD != null) PaquirrinHUD.SetActive(false);
+        if (FaryHUD != null) FaryHUD.SetActive(false);
     }
-
+    // Modificamos esta para que solo la use Pausar y Derrota
     private void SetEstadoHUD(bool estado)
     {
         if (healthBar != null) healthBar.SetActive(estado);
@@ -106,6 +135,7 @@ public class ControladorJuego : MonoBehaviour
         if (abilityR != null) abilityR.SetActive(estado);
         if (CigalaHUD != null) CigalaHUD.SetActive(estado);
         if (PaquirrinHUD != null) PaquirrinHUD.SetActive(estado);
+        if (FaryHUD != null) FaryHUD.SetActive(estado);
         if (QuestMenu != null) QuestMenu.SetActive(estado);
     }
 
@@ -127,8 +157,16 @@ public class ControladorJuego : MonoBehaviour
     public void SalirDelJuego()
     {
         Application.Quit();
-#if UNITY_EDITOR
-        UnityEditor.EditorApplication.isPlaying = false;
-#endif
+        #if UNITY_EDITOR
+                UnityEditor.EditorApplication.isPlaying = false;
+        #endif
+    }
+
+    public void ActivarVictoria()
+    {
+        juegoPausado = true;
+        pantallaVictoria.SetActive(true);
+        Time.timeScale = 0f; 
+        SetEstadoHUD(false);
     }
 }

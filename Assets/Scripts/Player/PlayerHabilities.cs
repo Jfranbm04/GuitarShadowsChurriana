@@ -26,8 +26,8 @@ public class PlayerHabilities : MonoBehaviour
     public GameObject stunArea;
     public GameObject abilityR;
     private bool RonCooldown = false;
-    private bool QActive = false;
-    private bool RActive = false;
+    public bool QActive = false;
+    public bool RActive = false;
     private float currentCooldownR;
     [SerializeField] private AudioSource sonidoQ;
     [SerializeField] private AudioSource sonidoR;

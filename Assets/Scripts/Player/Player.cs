@@ -52,6 +52,20 @@ public class Player : MonoBehaviour
         vida = maxHealth;
     }
 
+    // Nuevo método para curar una cantidad específica
+    public void CurarCantidad(float cantidad)
+    {
+        vida += cantidad;
+
+        // Nos aseguramos de no superar la vida máxima
+        if (vida > maxHealth)
+        {
+            vida = maxHealth;
+        }
+
+        Debug.Log("Jugador curado. Vida actual: " + vida);
+    }
+
     public void quitarVida(float damage)
     {
         if (!inmune)

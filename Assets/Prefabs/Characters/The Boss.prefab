@@ -144,9 +144,17 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::EnemyController
   vidaMaxima: 100
   estaCongelado: 0
+  prefabBotiquin: {fileID: 6370181631504559774, guid: 668ff3e25360b144f95823532a332cc7, type: 3}
+  probabilidadDrop: 0.6
   esJefe: 0
+  cigala: 0
+  paquirrin: 0
+  fary: 0
   healthSlider: {fileID: 0}
   easeHealthSlider: {fileID: 0}
+  textoCigala: {fileID: 0}
+  textoPaquirrin: {fileID: 0}
+  muroBloqueo: {fileID: 0}
 --- !u!195 &8579537397767788871
 NavMeshAgent:
   m_ObjectHideFlags: 0

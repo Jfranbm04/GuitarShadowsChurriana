@@ -13,6 +13,11 @@ public class EnemyController : MonoBehaviour
     [Header("Estados")]
     public bool estaCongelado = false;
 
+    [Header("Loot")]
+    public GameObject prefabBotiquin; 
+    [Range(0f, 1f)]
+    public float probabilidadDrop = 0.3f; // probabilidad
+
     [Header("Configuración de Jefe")]
     public bool esJefe = false;
     public bool cigala = false;
@@ -139,6 +144,17 @@ public class EnemyController : MonoBehaviour
             if (controlador != null)
             {
                 controlador.ActivarVictoria();
+            }
+        }
+
+        if (prefabBotiquin != null)
+        {
+            // Random.value devuelve un número entre 0.0 y 1.0. Si es <= 0.6, soltamos el objeto.
+            if (Random.value <= probabilidadDrop)
+            {
+                // Instanciamos el botiquín en la posición actual del enemigo, levantándolo un poco del suelo si es necesario
+                Vector3 spawnPosition = transform.position + new Vector3(0, 1f, 0);
+                Instantiate(prefabBotiquin, spawnPosition, Quaternion.identity);
             }
         }
 
